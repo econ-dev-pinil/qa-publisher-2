@@ -1,173 +1,1006 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-    
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AdStudio SDK — QA Test</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIELD & FIRE — Sports Blog</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --card: #1a1a1a;
+      --accent: #e8ff00;
+      --accent2: #ff3c3c;
+      --text: #f0ede6;
+      --muted: #888;
+      --border: #2a2a2a;
+    }
 
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 40px 24px;
-            background: #f9fafb;
-            color: #111827;
-            line-height: 1.5;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        main {
-            max-width: 720px;
-            margin: 0 auto;
-        }
+    html { scroll-behavior: smooth; }
 
-        h1 {
-            font-size: 28px;
-            margin: 0 0 8px;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-        p.lede {
-            color: #6b7280;
-            margin: 0 0 32px;
-        }
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+    }
 
-        section {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 16px;
-        }
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
 
-        section h2 {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #6b7280;
-            margin: 0 0 12px;
-        }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+    }
 
-        code {
-            background: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 13px;
-        }
+    .nav-logo span { color: var(--accent2); }
 
-        ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-    </style>
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-cta {
+      background: var(--accent);
+      color: #000;
+      padding: 0.45rem 1.2rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover { background: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 4rem 5rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 2px;
+      background: var(--accent);
+      vertical-align: middle;
+      margin-right: 0.6rem;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 7vw, 7.5rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      max-width: 38ch;
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+
+    .hero-btns { display: flex; gap: 1rem; align-items: center; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      padding: 0.85rem 2.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,255,0,0.3); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      padding: 0.85rem 2.2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right-inner {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .hero-graphic {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22vw;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(232,255,0,0.08);
+      user-select: none;
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    .hero-stat-strip {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      display: flex;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-stat {
+      flex: 1;
+      padding: 1.5rem;
+      border-right: 1px solid var(--border);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat .num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-stat .label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden;
+      background: var(--accent);
+      color: #000;
+      padding: 0.6rem 0;
+      border-top: 2px solid var(--accent);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .ticker {
+      display: flex;
+      gap: 4rem;
+      white-space: nowrap;
+      animation: ticker 25s linear infinite;
+    }
+
+    .ticker-item {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .ticker-item::before { content: '◆ '; opacity: 0.5; }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      line-height: 1;
+    }
+
+    /* ── FEATURED POSTS ── */
+    .featured-section {
+      padding: 6rem 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .view-all {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 2px;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.5px;
+    }
+
+    .post-card {
+      background: var(--card);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.3s;
+    }
+
+    .post-card:hover { transform: scale(1.005); }
+    .post-card:hover .card-img { transform: scale(1.04); }
+
+    .card-img-wrap { overflow: hidden; }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+
+    .card-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 6rem;
+      transition: transform 0.5s ease;
+    }
+
+    .card-body { padding: 1.8rem 2rem; }
+
+    .card-cat {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .card-cat.red { color: var(--accent2); }
+    .card-cat.white { color: #f0ede6; }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.25;
+      margin-bottom: 0.8rem;
+    }
+
+    .post-card.main .card-title { font-size: 2rem; }
+
+    .card-excerpt {
+      color: var(--muted);
+      font-size: 0.875rem;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-meta {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .card-meta .dot { color: var(--accent); }
+
+    /* span over 2 rows */
+    .post-card.main { grid-row: span 2; }
+
+    /* ── CATEGORIES STRIP ── */
+    .cat-strip {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .cat-item {
+      flex: 1;
+      padding: 2.5rem 2rem;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.25s;
+      text-align: center;
+    }
+
+    .cat-item:last-child { border-right: none; }
+    .cat-item:hover { background: var(--card); }
+    .cat-item:hover .cat-icon { transform: scale(1.15); }
+
+    .cat-icon {
+      font-size: 2rem;
+      margin-bottom: 0.8rem;
+      transition: transform 0.3s;
+      display: block;
+    }
+
+    .cat-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    .cat-count {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── LATEST POSTS ── */
+    .latest-section {
+      padding: 6rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 5rem;
+    }
+
+    .post-list { display: flex; flex-direction: column; gap: 0; }
+
+    .post-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1.5rem;
+      padding: 1.8rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      align-items: start;
+      transition: padding-left 0.25s;
+    }
+
+    .post-row:hover { padding-left: 0.5rem; }
+
+    .post-row-thumb {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .post-row-thumb .card-placeholder {
+      aspect-ratio: 4/3;
+      font-size: 2.5rem;
+    }
+
+    .post-row-content {}
+
+    .post-row-cat {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .post-row-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      line-height: 1.3;
+      margin-bottom: 0.6rem;
+    }
+
+    .post-row-meta {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar { }
+
+    .sidebar-widget {
+      margin-bottom: 3rem;
+    }
+
+    .widget-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .trending-list { display: flex; flex-direction: column; gap: 1rem; }
+
+    .trending-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .trending-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--border);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 2rem;
+    }
+
+    .trending-item:hover .trending-num { color: var(--accent); }
+
+    .trending-item-title {
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .newsletter-widget {
+      background: var(--card);
+      padding: 2rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    .newsletter-widget p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .nl-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .nl-input:focus { border-color: var(--accent); }
+    .nl-input::placeholder { color: var(--muted); }
+
+    .nl-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .nl-btn:hover { background: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080808;
+      border-top: 1px solid var(--border);
+      padding: 4rem 5rem 2rem;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 4rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .footer-logo span { color: var(--accent2); }
+
+    .footer-about {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+
+    .footer-col-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .social-links { display: flex; gap: 1rem; }
+    .social-links a {
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .social-links a:hover { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── BG COLORS FOR PLACEHOLDERS ── */
+    .bg1 { background: #1c1c24; color: #3a3a50; }
+    .bg2 { background: #1f1a1a; color: #3a2a2a; }
+    .bg3 { background: #181c18; color: #2a3a2a; }
+    .bg4 { background: #1c1c1c; color: #333; }
+    .bg5 { background: #1a1820; color: #332a40; }
+  </style>
 </head>
-
 <body>
 
-<main>
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-logo">Field<span>&</span>Fire</div>
+    <ul class="nav-links">
+      <li><a href="#">Football</a></li>
+      <li><a href="#">Basketball</a></li>
+      <li><a href="#">Tennis</a></li>
+      <li><a href="#">Cricket</a></li>
+      <li><a href="#">Olympics</a></li>
+    </ul>
+    <button class="nav-cta">Subscribe</button>
+  </nav>
 
-    <h1>AdPlacement may14 6pm</h1>
-<!-- Revive Adserver Asynchronous JS Tag - Generated with Revive Adserver v5.4.1 -->
-<ins data-revive-zoneid="6" data-revive-id="1a4f77d471a3fd979889b9ceb8234d08"></ins>
-<script async src="//dw5p3whfqbm0d.cloudfront.net/revive/www/delivery/asyncjs.php"></script>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">The pulse of sport</p>
+      <h1>Where <em>Legends</em><br>Are Written</h1>
+      <p class="hero-desc">Deep dives, bold opinions, and live coverage of the moments that define sport. No filler. Only fire.</p>
+      <div class="hero-btns">
+        <button class="btn-primary">Explore Stories</button>
+        <button class="btn-ghost">Watch Highlights</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-right-inner">
+        <div class="hero-graphic">⚽</div>
+      </div>
+    </div>
+    <div class="hero-stat-strip">
+      <div class="hero-stat" style="animation-delay:0.1s">
+        <span class="num">2,400+</span>
+        <span class="label">Articles Published</span>
+      </div>
+      <div class="hero-stat" style="animation-delay:0.2s">
+        <span class="num">84</span>
+        <span class="label">Sports Covered</span>
+      </div>
+      <div class="hero-stat" style="animation-delay:0.3s">
+        <span class="num">1.2M</span>
+        <span class="label">Monthly Readers</span>
+      </div>
+      <div class="hero-stat" style="animation-delay:0.4s">
+        <span class="num">Live</span>
+        <span class="label" style="color:var(--accent2)">&#9679; Coverage Active</span>
+      </div>
+    </div>
+  </section>
 
+  <!-- TICKER -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item">Champions League Final Preview</span>
+      <span class="ticker-item">NBA Playoffs — Game 7 Tonight</span>
+      <span class="ticker-item">Wimbledon Draw Announced</span>
+      <span class="ticker-item">Cricket World Cup Squad Revealed</span>
+      <span class="ticker-item">F1 Monaco Grand Prix Results</span>
+      <span class="ticker-item">Tour de France Route Unveiled</span>
+      <span class="ticker-item">Champions League Final Preview</span>
+      <span class="ticker-item">NBA Playoffs — Game 7 Tonight</span>
+      <span class="ticker-item">Wimbledon Draw Announced</span>
+      <span class="ticker-item">Cricket World Cup Squad Revealed</span>
+      <span class="ticker-item">F1 Monaco Grand Prix Results</span>
+      <span class="ticker-item">Tour de France Route Unveiled</span>
+    </div>
+  </div>
 
-    <h1>AdStudio SDK — QA Test m14</h1>
+  <!-- FEATURED POSTS -->
+  <section class="featured-section fade-in">
+    <div class="section-header">
+      <div>
+        <p class="section-label">Top Stories</p>
+        <h2 class="section-title">Featured</h2>
+      </div>
+      <a href="#" class="view-all">View All Stories</a>
+    </div>
+    <div class="featured-grid">
 
-    <p class="lede">
-        This page loads the AdStudio SDK from S3. The chat bubble should appear in the bottom-right corner after the configured init delay.
-    </p>
+      <!-- MAIN CARD -->
+      <div class="post-card main">
+        <div class="card-img-wrap">
+          <div class="card-placeholder bg1">⚽</div>
+        </div>
+        <div class="card-body">
+          <p class="card-cat">Football · Champions League</p>
+          <h3 class="card-title">The Night Madrid Defied Physics — A Champions League Retrospective</h3>
+          <p class="card-excerpt">From the first whistle to the final thunderous roar of 80,000 fans, this was a night football will never forget. We break down every tactical shift, every pivotal moment.</p>
+          <div class="card-meta">
+            <span>Marcus Lane</span>
+            <span class="dot">◆</span>
+            <span>June 1, 2026</span>
+            <span class="dot">◆</span>
+            <span>8 min read</span>
+          </div>
+        </div>
+      </div>
 
-    <section>
-        <h2>SDK config</h2>
-        <ul>
-            <li><strong>SDK bundle:</strong> <code>adstudio-sdk.umd.js</code></li>
-            <li><strong>baseUrl:</strong> ALB dev endpoint</li>
-            <li><strong>bucketUrl:</strong> S3 bucket root</li>
-            <li><strong>bridgeUrl:</strong> adid bridge</li>
-        </ul>
-    </section>
+      <!-- SECONDARY CARD 1 -->
+      <div class="post-card">
+        <div class="card-img-wrap">
+          <div class="card-placeholder bg2">🏀</div>
+        </div>
+        <div class="card-body">
+          <p class="card-cat red">Basketball · NBA</p>
+          <h3 class="card-title">Game 7 or Bust: Why This Series Is Already Legendary</h3>
+          <p class="card-excerpt">Both rosters are hobbled. Both cities are breathless. And yet here we are — forced into a deciding game that no one could have scripted better.</p>
+          <div class="card-meta">
+            <span>Aaliyah Brooks</span>
+            <span class="dot">◆</span>
+            <span>May 31, 2026</span>
+          </div>
+        </div>
+      </div>
 
-    <section>
-        <h2>What to verify</h2>
-        <ul>
-            <li>Bubble appears in bottom-right after ~5s</li>
-            <li>Modal opens without <code>null</code> URL</li>
-            <li>API calls go to ALB (not S3)</li>
-            <li>Navigation works inside modal</li>
-        </ul>
-    </section>
+      <!-- SECONDARY CARD 2 -->
+      <div class="post-card">
+        <div class="card-img-wrap">
+          <div class="card-placeholder bg3">🎾</div>
+        </div>
+        <div class="card-body">
+          <p class="card-cat white">Tennis · Wimbledon</p>
+          <h3 class="card-title">A New Generation Knocks on Wimbledon's Door</h3>
+          <p class="card-excerpt">With the draw finalized, three 19-year-olds have landed in the same quarter — and only one of them will emerge as the story of this fortnight.</p>
+          <div class="card-meta">
+            <span>Kenji Mori</span>
+            <span class="dot">◆</span>
+            <span>June 2, 2026</span>
+          </div>
+        </div>
+      </div>
 
-    <!-- AdId Testing Panel -->
-    <div id="adid-test-panel" style="
-        position: fixed;
-        bottom: 80px;
-        left: 16px;
-        z-index: 9999;
-        background: #1a1a2e;
-        color: #eee;
-        border-radius: 12px;
-        padding: 16px 20px;
-        font-family: monospace;
-        font-size: 13px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-        min-width: 320px;
-    ">
-        <div style="margin-bottom: 10px;">
-            <label style="color: #aaa; font-size: 11px; text-transform: uppercase;">
-                Current AdId
-            </label>
+    </div>
+  </section>
 
-            <div id="adid-display" style="
-                background: #0d0d1a;
-                padding: 8px 10px;
-                border-radius: 6px;
-                margin-top: 4px;
-                word-break: break-all;
-                color: #43e97b;
-                min-height: 20px;
-            ">—</div>
+  <!-- CATEGORY STRIP -->
+  <div class="cat-strip fade-in">
+    <div class="cat-item">
+      <span class="cat-icon">⚽</span>
+      <div class="cat-name">Football</div>
+      <div class="cat-count">342 articles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-icon">🏀</span>
+      <div class="cat-name">Basketball</div>
+      <div class="cat-count">218 articles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-icon">🎾</span>
+      <div class="cat-name">Tennis</div>
+      <div class="cat-count">156 articles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-icon">🏏</span>
+      <div class="cat-name">Cricket</div>
+      <div class="cat-count">189 articles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-icon">🏎️</span>
+      <div class="cat-name">Formula 1</div>
+      <div class="cat-count">134 articles</div>
+    </div>
+    <div class="cat-item">
+      <span class="cat-icon">🚴</span>
+      <div class="cat-name">Cycling</div>
+      <div class="cat-count">98 articles</div>
+    </div>
+  </div>
+
+  <!-- LATEST + SIDEBAR -->
+  <section class="latest-section fade-in">
+    <div>
+      <div style="margin-bottom:2rem; border-bottom:1px solid var(--border); padding-bottom:1.5rem;">
+        <p class="section-label">Fresh from the press</p>
+        <h2 class="section-title">Latest Posts</h2>
+      </div>
+      <div class="post-list">
+
+        <div class="post-row">
+          <div class="post-row-thumb">
+            <div class="card-placeholder bg4">🏏</div>
+          </div>
+          <div class="post-row-content">
+            <p class="post-row-cat">Cricket</p>
+            <h4 class="post-row-title">How India's Middle Order Became Their Greatest Weapon</h4>
+            <p class="post-row-meta">Sofia Ramírez · May 30, 2026 · 6 min read</p>
+          </div>
         </div>
 
-        <button onclick="refreshAdId()" style="
-            width: 100%;
-            padding: 6px;
-            border-radius: 6px;
-            border: 1px solid #333;
-            background: #0d0d1a;
-            color: #4facfe;
-            cursor: pointer;
-        ">
-            Refresh
-        </button>
+        <div class="post-row">
+          <div class="post-row-thumb">
+            <div class="card-placeholder bg5">🏎️</div>
+          </div>
+          <div class="post-row-content">
+            <p class="post-row-cat">Formula 1</p>
+            <h4 class="post-row-title">Monaco Aftermath: The Data Behind the Dominant Pit Strategy</h4>
+            <p class="post-row-meta">Tom Hadley · May 29, 2026 · 5 min read</p>
+          </div>
+        </div>
+
+        <div class="post-row">
+          <div class="post-row-thumb">
+            <div class="card-placeholder bg1">⚽</div>
+          </div>
+          <div class="post-row-content">
+            <p class="post-row-cat">Football</p>
+            <h4 class="post-row-title">The False Nine Is Dead. Long Live the False Nine.</h4>
+            <p class="post-row-meta">Marcus Lane · May 28, 2026 · 7 min read</p>
+          </div>
+        </div>
+
+        <div class="post-row">
+          <div class="post-row-thumb">
+            <div class="card-placeholder bg2">🏊</div>
+          </div>
+          <div class="post-row-content">
+            <p class="post-row-cat">Olympics</p>
+            <h4 class="post-row-title">Paris Legacy: Are the 2024 Olympic Venues Still Thriving?</h4>
+            <p class="post-row-meta">Aaliyah Brooks · May 27, 2026 · 4 min read</p>
+          </div>
+        </div>
+
+        <div class="post-row">
+          <div class="post-row-thumb">
+            <div class="card-placeholder bg3">🥊</div>
+          </div>
+          <div class="post-row-content">
+            <p class="post-row-cat">Boxing</p>
+            <h4 class="post-row-title">The Rematch Nobody Wanted — Until Now</h4>
+            <p class="post-row-meta">Kenji Mori · May 26, 2026 · 3 min read</p>
+          </div>
+        </div>
+
+      </div>
     </div>
 
-</main>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-widget">
+        <div class="widget-title">Trending Now</div>
+        <div class="trending-list">
+          <div class="trending-item">
+            <span class="trending-num">01</span>
+            <span class="trending-item-title">Mbappe's injury latest — will he be fit for the final?</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-num">02</span>
+            <span class="trending-item-title">LeBron James announces final season decision</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-num">03</span>
+            <span class="trending-item-title">Alcaraz seeded 1st at Wimbledon for first time</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-num">04</span>
+            <span class="trending-item-title">India vs Australia — Series preview & predictions</span>
+          </div>
+          <div class="trending-item">
+            <span class="trending-num">05</span>
+            <span class="trending-item-title">Red Bull launches new livery for Canadian GP</span>
+          </div>
+        </div>
+      </div>
 
-  <script src="https://adstudio-sdk-qa-996209450149.s3.ap-southeast-1.amazonaws.com/sdk/adstudio-sdk.umd.js"
+      <div class="sidebar-widget">
+        <div class="newsletter-widget">
+          <div class="widget-title" style="border-color:var(--accent2)">Stay Ahead</div>
+          <p>Get the biggest sports stories delivered every morning before anyone else wakes up.</p>
+          <input class="nl-input" type="email" placeholder="your@email.com" />
+          <button class="nl-btn">Get the Newsletter</button>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">Field<span>&</span>Fire</div>
+        <p class="footer-about">The sports blog for people who care too much. We cover the beautiful, the brutal, and the brilliant — from grassroots to global stages.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Sports</div>
+        <ul class="footer-links">
+          <li><a href="#">Football</a></li>
+          <li><a href="#">Basketball</a></li>
+          <li><a href="#">Tennis</a></li>
+          <li><a href="#">Cricket</a></li>
+          <li><a href="#">Formula 1</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Our Writers</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Advertise</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Cookie Settings</a></li>
+          <li><a href="#">Accessibility</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Field & Fire. All rights reserved.</span>
+      <div class="social-links">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">YouTube</a>
+        <a href="#">Podcast</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered fade-ins
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+      <script src="https://adstudio-sdk-qa-996209450149.s3.ap-southeast-1.amazonaws.com/sdk/adstudio-sdk.umd.js"
         data-position="bottom-right"
         data-bubble-size="60"
         data-bridge-url="https://adstudio-sdk-qa-996209450149.s3.ap-southeast-1.amazonaws.com/bridge/adid-bridge.html"
-        data-base-url="https://dev.adstudio.cloud"
+        data-base-url="https://qa.adstudio.cloud"
         data-bucket-url="https://adstudio-sdk-qa-996209450149.s3.ap-southeast-1.amazonaws.com"
         data-init-delay="5000">
     </script>
-
-<script>
-    function getAdstudioAdId() {
-        const cookies = document.cookie.split('; ');
-        const cookie = cookies.find(row => row.startsWith('_adstudio_adid='));
-        return cookie ? decodeURIComponent(cookie.split('=')[1]) : null;
-    }
-
-    function refreshAdId() {
-        const val = getAdstudioAdId();
-        document.getElementById('adid-display').textContent = val || '—';
-    }
-
-    refreshAdId();
-</script>
 
 </body>
 </html>
