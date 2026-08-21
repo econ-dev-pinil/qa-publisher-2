@@ -660,6 +660,60 @@
     .bg3 { background: #181c18; color: #2a3a2a; }
     .bg4 { background: #1c1c1c; color: #333; }
     .bg5 { background: #1a1820; color: #332a40; }
+
+    /* ── RESPONSIVE ──
+       Revive injects the creative at its natural size (the 800px banner), which
+       overflowed the 390px body and inflated the layout viewport to 800px. Any
+       position: fixed widget — including the Ad Studio bubble — then anchors to
+       that 800px box and lands off-screen. Clamping the creative keeps the
+       layout viewport equal to the device width. */
+    img,
+    iframe {
+      max-width: 100%;
+    }
+
+    ins[data-revive-zoneid] {
+      display: block;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    ins[data-revive-zoneid] img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 900px) {
+      /* Every multi-column grid collapses, otherwise the fixed 320px sidebar
+         and the 1fr 1fr hero keep the document ~731px wide on a phone. */
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 3rem 1.25rem; }
+      .featured-grid { grid-template-columns: 1fr; }
+      .latest-section { grid-template-columns: 1fr; padding: 3rem 1.25rem; gap: 2.5rem; }
+      .post-row { grid-template-columns: 100px 1fr; gap: 1rem; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+      /* The four social links in one non-wrapping row were the last thing
+         holding the document wider than the phone screen. */
+      .social-links { flex-wrap: wrap; gap: 0.75rem 1rem; }
+
+      /* Four stats in a row don't fit a phone; without wrapping they push the
+         document past the viewport width. */
+      .hero-stat-strip { position: static; flex-wrap: wrap; }
+      .hero-stat { flex: 1 1 50%; min-width: 0; }
+
+      nav { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+
+      /* min-width: 0 lets the flex item shrink so overflow-x can scroll it,
+         instead of the list forcing the nav (and the document) wider. */
+      .nav-links {
+        order: 3;
+        width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        gap: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1018,8 +1072,7 @@
         data-base-url="https://qa.adstudio.cloud"
         data-bucket-url="https://adstudio-sdk-qa-996209450149.s3.ap-southeast-1.amazonaws.com/"
         data-init-delay="1000"
-        data-dismiss-duration-seconds="180">
-></script>
+        data-dismiss-duration-seconds="180"></script>
 
 
 </body>
